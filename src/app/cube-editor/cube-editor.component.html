@@ -1,14 +1,32 @@
 <canvas style="display:block" #cube_editor></canvas>
-<div class="top-left"></div>
-<div class="top-right">
+<div [ngClass]="{'d-flex justify-content-center align-items-center topbar': true, 'topbar-edit': mode === 1, 'topbar-view': mode === 0, 'topbar-clear': mode === 2}">
+  <div class="topbar-title">
+    <p *ngIf="mode === 0">View Mode</p>
+    <p *ngIf="mode === 1">Edit Mode</p>
+    <p *ngIf="mode === 2">Clear View Mode</p>
+  </div>
+  <div class="topbar-title" *ngIf="mode === 1">
+    <p><small *ngIf="mode">Highlight Mode: {{highlighted.mode}}</small><small *ngIf="selected > -1"> -- index: {{selected}}</small></p>
+  </div>
+</div>
+<div class="top-left section"></div>
+<div class="top-right section">
   <div class="row">
-
-    <div class="col-12"><button (click)="expandCube()" class="btn btn-primary float-right m-2 w-100"><i class="fa fa-arrow-alt-circle-up"></i> Expand </button></div>
-    <div class="col-12"><button (click)="contractCube()" class="btn btn-primary float-right m-2 w-100"><i class="fa fa-arrow-alt-circle-down"></i> Contract </button></div>
-
-
+    <div class="col-12"><h5><b>USAGE:</b></h5><hr></div>
+    <div class="col-12"><small><b>[Tab]:</b> Change Mode</small></div>
+    <div class="col-12"><small><b>[Alt]:</b> Change Highlight Mode</small></div>
+    <div class="col-12"><small><b>[Space]:</b> Select (row/col)</small></div>
+    <div class="col-12"><small><b>[+]:</b> Expand cube</small></div>
+    <div class="col-12"><small><b>[-]:</b> Contract cube</small></div>
+    <div class="col-12"><small><b>[LMB]:</b> Turn LED ON/OFF</small></div>
+    <div class="col-12"><small><b>[W / Arrow Up]:</b> Row Up</small></div>
+    <div class="col-12"><small><b>[S / Arrow Down]:</b> Row Down</small></div>
+    <div class="col-12"><small><b>[A / Arrow Left]:</b> Column Left</small></div>
+    <div class="col-12"><small><b>[D / Arrow Right]:</b> Column Right</small></div>
+    <div class="col-12"><small><b>[Ctrl+C]:</b> Copy (row/col)</small></div>
+    <div class="col-12"><small><b>[Ctrl+V]:</b> Paste (row/col)</small></div>
   </div>
 
 </div>
-<div class="bottom-left"></div>
-<div class="bottom-right"></div>
+<div class="bottom-left section"></div>
+<div class="bottom-right section"></div>

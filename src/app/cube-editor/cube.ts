@@ -9,7 +9,7 @@ export class Cube {
   private _geometry: THREE.BoxBufferGeometry;
   private _currentScale = 1;
 
-  constructor(dimensions: number, led_size: number, spacing: number){
+  constructor(dimensions: number, led_size: number, spacing: number, led_color: number, led_opacity: number){
     this._dimensions = dimensions;
     this._led_size = led_size;
     this._spacing = spacing;
@@ -29,9 +29,11 @@ export class Cube {
       var x = (i - positionOffset) * increment,
           y = (j - positionOffset) * increment,
           z = (k - positionOffset) * increment;
-      var l = new Led(this._geometry, new THREE.Vector3(x,y,z), this._led_size, 0x0CBCDC, 0.45, {i: i, j: j, k: k});
+      var l = new Led(this._geometry, new THREE.Vector3(x,y,z), this._led_size, led_color, led_opacity, {i: i, j: j, k: k});
       this._leds[i][j].push(l);
     });
+
+
   }
 
   public getLed(x: number, y: number, z: number){
@@ -40,13 +42,27 @@ export class Cube {
 
   public get dimensions(){return this._dimensions; }
 
+  public get state(): any[]{
+    var _state = [];
+    for(var i = 0; i < this._dimensions; i++){
+      _state.push([]);
+      for(var j = 0; j < this._dimensions; j++){
+        _state[i].push([]);
+      }
+    }
+    this.forAllLeds((i,j,k,led) => {
+      _state[i][j].push(led.state);
+    });
+    return _state;
+  }
+
   public addTo(scene: THREE.Scene){
     this.forAllLeds((i,j,k,led) => {
       led.addTo(scene);
     })
   }
 
-  private forAllLeds(callback){
+  public forAllLeds(callback){
     for(var i = 0; i < this._dimensions; i ++) {
       for(var j = 0; j < this._dimensions; j ++) {
         for(var k = 0; k < this._dimensions; k ++) {
@@ -67,6 +83,10 @@ export class Cube {
           led.position = new THREE.Vector3(x,y,z);
           led.scale = new THREE.Vector3(this._led_size, this._led_size, this._led_size);
     });
+  }
+
+  public getSpacing(){
+    return this._spacing;
   }
 
   public scale(scale: number){

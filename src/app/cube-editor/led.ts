@@ -3,6 +3,8 @@ import * as THREE from 'three-full';
 export class Led {
 
   private _mesh: THREE.Mesh;
+  private _state: boolean;
+  private _coordinates: Object;
 
   constructor(geometry: THREE.BoxBufferGeometry, position: THREE.Vector3, initSize: number, color: number, opacity: number, coordinates: Object){
     this._mesh = new THREE.Mesh(geometry, new THREE.MeshLambertMaterial({ color: color }));
@@ -15,7 +17,13 @@ export class Led {
     this._mesh.userData.type = 1;
     this._mesh.material.opacity = opacity;
     this._mesh.material.transparent = true;
-    this._mesh.userData = coordinates;
+    this._mesh.userData = {
+      led: this,
+      currentHex: null
+    };
+    this._coordinates = coordinates;
+    this._state = false;
+
   }
 
   public get geometry(): THREE.BoxBufferGeometry {return this._mesh.geometry;}
@@ -43,10 +51,22 @@ export class Led {
   public set material(material: THREE.MeshLambertMaterial){this._mesh.material = material;}
 
   public get color(): number {return this._mesh.material.color.getHex();}
-  public set color(color: number) {this._mesh.material.color = THREE.Color(color);}
+  public set color(color: number) {this._mesh.material.color.setHex(color);}
+
+  public get opacity(): number {return this._mesh.material.opacity;}
+  public set opacity(opacity: number) {this._mesh.material.opacity = opacity;}
+
+  public get coordinates(): Object {return this._coordinates;}
+
+  public get state(): boolean {return this._state;}
+  public set state(state: boolean){ this._state = state;}
 
   public addTo(scene: THREE.Scene){
     scene.add(this.mesh);
+  }
+
+  public removeFrom(scene: THREE.Scene){
+    scene.remove(this.mesh);
   }
 
 
